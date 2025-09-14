@@ -54,7 +54,7 @@ async def get_cryptorates():
                 crates = {
                     c["symbol"][:-1]: float(c["price"])
                     for c in data
-                    if c["symbol"].endswith("USDT") and float(c['price']) > 0
+                    if c["symbol"].endswith("USDT") and float(c["price"]) > 0
                 }
                 return crates
             return {
@@ -75,12 +75,21 @@ async def get_top_cryptorates():
                     for c in data
                     if c["symbol"].endswith("USDT") and float(c["lastPrice"]) > 0
                 }
+                print("get rates")
                 return crates
             return {
                 "ok": False,
                 "status": response.status,
                 "message": "cryptorates is not ended",
             }
+
+
+async def get_full_rates():
+    fiat_rates = await get_usdt_fiat_rates()
+    crypto_rates = await get_cryptorates()
+    rates = fiat_rates | crypto_rates
+    print("Get rates")
+    return rates
 
 
 if __name__ == "__main__":
